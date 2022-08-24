@@ -18,5 +18,5 @@ Használat:
 
 A program semmilyen módon nem módosítja a GTA:SA fájljait, MTA fájljait vagy a SeeMTA fájljait. Továbbá semmiképpen se lép interakcióba semmilyen SeeMTA-hoz kötődő rendszerrel, **kizárólag** az MTA napilog fájlt vizsgálja, és követi figyelemmel. 
 
-created by: **avi8**
-avi8#0758
+created by: **avi8#0758**
+
