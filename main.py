@@ -1,11 +1,11 @@
-
 import time
 import openpyxl
 from datetime import datetime
 import time, os
 
 
-print("Version 3.0")
+print("Version 4.0")
+print()
 
 dutyperc = 0
 asegit = 0
@@ -15,49 +15,74 @@ oilchange = 0
 startTime = 0
 endTime = 0
 
+adminnick = False
+logsfolder = False
+
+f_mtalogs = open("mtalogs.txt", "r")
+logsfolder = f_mtalogs.read() + "\console.log"
+f_adminnick = open("adminnick.txt", "r")
+adminnick = f_adminnick.read()
+print("                  oo .d888b. ")
+print("                     Y8' `8P ")
+print(".d8888b. dP   .dP dP d8bad8b ")
+print("88'  `88 88   d8' 88 88` `88 ")
+print("88.  .88 88 .88'  88 8b. .88 ")
+print("`88888P8 8888P'   dP Y88888P")
+
+
+
+
+
+
 
 try:
-    workbook = openpyxl.load_workbook(filename="./admin.xlsx")
+    workbook = openpyxl.load_workbook("./admin.xlsx")
     sheet = workbook.active
-    sheet["A1"] = "MKLS ADMIN SHEET"
+    sheet["A1"] = adminnick + " ADMIN SHEET"
     sheet["A4"] = "Dutypercek:"
     sheet["A6"] = "Asegit használat:"
     sheet["A8"] = "Setarmor használat:"
     sheet["D4"] = "Fixveh használat:"
     sheet["D6"] = "Oilchange használat:"
-
-    dutyperc = sheet.cell(row = 4, column = 2).value
-    asegit = sheet.cell(row = 6, column = 2).value
-    setarmor = sheet.cell(row = 8, column = 2).value
-    fix = sheet.cell(row = 4, column = 5).value
-    oilchange = sheet.cell(row = 6, column = 5).value
-
-    if dutyperc == None:
+    
+    if sheet.cell(row = 4, column = 2).value == None:
         dutyperc = 0
-    elif asegit == None:
+        sheet["B4"] = 0
+    else:
+        dutyperc = sheet.cell(row = 4, column = 2).value
+    if sheet.cell(row = 6, column = 2).value == None:
         asegit = 0
-    elif setarmor == None:
+        sheet["B6"] = 0
+    else:
+        asegit = sheet.cell(row = 6, column = 2).value
+    if sheet.cell(row = 8, column = 2).value == None:
         setarmor = 0
-    elif fix == None:
+        sheet["B8"] = 0
+    else:
+        setarmor = sheet.cell(row = 8, column = 2).value
+    if sheet.cell(row = 4, column = 5).value == None:
         fix = 0
-    elif oilchange == None:
+        sheet["E4"] = 0
+    else:
+        fix = sheet.cell(row = 4, column = 5).value
+    if sheet.cell(row = 6, column = 5).value == None:
         oilchange = 0
+        sheet["E6"] = 0
+    else:
+        oilchange = sheet.cell(row = 6, column = 5).value
 
     print("Percek: " + str(dutyperc))
     print("Asegit: " + str(asegit))
     print("Setarmor: " + str(setarmor))
     print("fix: " + str(fix))
     print("oilchange: " + str(oilchange))
-    workbook.save(filename="./admin.xlsx")
+    workbook.save("./admin.xlsx")
 except:
-    print("FAULT: admin.xlsx not found. Create admin.xlsx at the MTA Log folder. ex.: D:\mta-root-directory\MTA\logs")
+    print("FAULT: admin.xlsx not found. Create admin.xlsx at the base folder of this script!")
 
-#Set the filename and open the file
-filename = 'console.log'
-file = open(filename,'r', encoding='utf-8')
+file = open(logsfolder,'r', encoding='utf-8')
 
-#Find the size of the file and move to the end
-st_results = os.stat(filename)
+st_results = os.stat(logsfolder)
 st_size = st_results[6]
 file.seek(st_size)
 
@@ -68,29 +93,35 @@ while 1:
         time.sleep(1)
         file.seek(where)
     else:
-        print(line) # already has newline
-        if "[" in line and "]" in line and "[Output]" in line:
-            timeLine = line.split("[")
-            timeLine = timeLine[1].split("]")
-            timeLine = timeLine[0]
-            print(timeLine)
+        print(line) 
         
-        if "Mkls megjavította a járművedet" in line:
+        
+        if "Sikeresen megjavítottad" in line:
             fix += 1
             print("fixek: " + str(fix))
-        elif "Mkls kicserélte a járműved olaját" in line:
+        elif "Sikeresen kicserélted" in line and "járművének olaját." in line:
             oilchange += 1
             print("oilchangek: " + str(oilchange))
         elif "Sikeresen felsegítetted a kiválasztott játékost" in line:
             asegit += 1
             print("asegitek: " + str(asegit))
-        elif "Mkls" in line and "páncélját" in line:
+        elif adminnick in line and "páncélját" in line:
             setarmor += 1
             print("setarmorok: " + str(setarmor))
-        elif "[AdminDuty]: Mkls adminszolgálatba lépett." in line or "[Infobox]: Mkls adminszolgálatba lépett." in line:
-            startTime = timeLine
-            print("started duty: " + timeLine)
-        elif "[AdminDuty]: Mkls kilépett az adminszolgálatból." in line:
+        elif "[AdminDuty]: " + adminnick + " adminszolgálatba lépett." in line or "[Infobox]: " + adminnick + " adminszolgálatba lépett." in line:
+            if "[" in line and "]" in line and "[Output]" in line:
+                timeLine = line.split("[")
+                timeLine = timeLine[1].split("]")
+                timeLine = timeLine[0]
+                print(timeLine)
+                startTime = timeLine
+                print("started duty: " + timeLine)
+        elif "[AdminDuty]: " + adminnick + " kilépett az adminszolgálatból." in line:
+            if "[" in line and "]" in line and "[Output]" in line:
+                timeLine = line.split("[")
+                timeLine = timeLine[1].split("]")
+                timeLine = timeLine[0]
+                print(timeLine)
             endTime = timeLine
 
             print("end: " + endTime)
@@ -101,7 +132,7 @@ while 1:
             print("dutypercek: " + str(dutyperc))
 
 
-        workbook = openpyxl.load_workbook(filename="./admin.xlsx")
+        workbook = openpyxl.load_workbook("./admin.xlsx")
         sheet = workbook.active
         sheet["B4"] = dutyperc
         sheet["B6"] = asegit
@@ -110,4 +141,4 @@ while 1:
         sheet["E4"] = fix
         sheet["E6"] = oilchange
 
-        workbook.save(filename="./admin.xlsx")
+        workbook.save("./admin.xlsx")
