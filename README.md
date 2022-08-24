@@ -1,4 +1,5 @@
 **Hamarabb kijött mint a SeeMTA v4**
+
 mtalogs.txt és adminnick.txt-t szerkeszteni kell, különben nem fog működni.
 Logolja a duty perceket, asegit használatot, fixeket, olajcserét, és a setarmort.
 A logolt adatokat az admin.xlsx fájlba írja be a program.
